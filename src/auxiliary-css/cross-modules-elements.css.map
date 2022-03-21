@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,wBAAwB,CAAC;EACrB,OAAO,EAAE,IAAI;EACb,eAAe,EAAE,MAAM;EACvB,WAAW,EAAE,MAAM;EAEnB,KAAK,EAAE,IAAI;CACd;;AAED,AAAA,+BAA+B,CAAC;EAC5B,cAAc,EAAE,MAAM;CACzB;;AAED,AAAA,WAAW,CAAC;EACR,KAAK,EAAE,GAAG;EACV,SAAS,EAAE,IAAI;CAClB",
+    "sources": [
+        "cross-modules-elements.scss"
+    ],
+    "names": [],
+    "file": "cross-modules-elements.css"
+}

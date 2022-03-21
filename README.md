@@ -1,4 +1,7 @@
-# Getting Started with Create React App
+# The managable list
+This is the list of cards with text data, downloaded from the server. You can make a selection of cards, search by their text content, you can swap cards using drag-and-drop. The sequence of cards and their selection are resistant to page refresh. The list is automatically completed when the page is scrolled down.
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

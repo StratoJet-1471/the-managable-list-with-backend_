@@ -1,0 +1,40 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    
+    box-sizing: border-box;
+
+    font-size: 15px;
+    line-height: 18px;
+    color: black;
+
+    background-color: rgb(240, 255, 255);
+    border: 1px solid rgb(169, 169, 169);
+    border-radius: 5px;
+
+    cursor: grab;
+
+    margin: 10px 0 10px 0;    
+    padding: 5px;
+    width: 300px;
+    min-height: 140px;
+}
+
+.card_selected {
+    background-color: rgb(176, 224, 230);
+}
+
+.card_drag-over {
+    background-color: white;
+}
+
+.card__title {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.card_not-draggable {
+    cursor: auto;
+}
