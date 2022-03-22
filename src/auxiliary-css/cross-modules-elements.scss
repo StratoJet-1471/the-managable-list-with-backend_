@@ -14,3 +14,21 @@
     color: red;
     font-size: 18px;    
 }
+
+.some-process-indicator {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+
+    position: fixed; 
+    left: opx;
+    bottom: 0px; 
+
+    background-color: rgb(154, 205, 50);
+    color:rgb(0, 2, 139);
+    
+    font-size: 22px;
+    
+    width: 100%; 
+    height: 100px; 
+}

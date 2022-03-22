@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
-import { selectCard, deselectCard } from '../react-redux-store/cardsSlice';
+import { selectCard, deselectCard } from '../../react-redux-store/cardsSlice';
 
-import Card from './Card';
+import CardsList__Card from './CardsList__Card';
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -10,6 +10,6 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-const CardContainer = connect(null, mapDispatchToProps) (Card);
+const CardContainer = connect(null, mapDispatchToProps) (CardsList__Card);
 
 export default CardContainer;

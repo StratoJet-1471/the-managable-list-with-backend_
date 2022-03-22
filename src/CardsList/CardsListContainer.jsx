@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import {updateAllInfoAboutSelectedCards, updateCardsSequenceInfo } from '../react-redux-store/cardsSlice';
+import {updateCardsSequenceInfo, fetchCardsByIds } from '../react-redux-store/cardsSlice';
 
 
 import CardsList from './CardsList';
@@ -9,14 +9,15 @@ const mapStateToProps = state => {
         cards: state.cards,
         cardsSequenceInfo: state.cardsSequenceInfo,
         cardsProducedSequenceInfo: state.cardsProducedSequenceInfo,
-        fetchToExpandListStatus: state.fetchToExpandListStatus
+        fetchCardsByIdsStatus: state.fetchCardsByIdsStatus
     };
 };
 
+
 const mapDispatchToProps = (dispatch) => {
     return {
-        updateAllInfoAboutSelectedCards: infoObjects => dispatch(updateAllInfoAboutSelectedCards(infoObjects)),
-        updateCardsSequenceInfo: newCardsSequence => dispatch(updateCardsSequenceInfo(newCardsSequence))
+        updateCardsSequenceInfo: newCardsSequence => dispatch(updateCardsSequenceInfo(newCardsSequence)),
+        fetchCardsByIds: (ids) => dispatch(fetchCardsByIds(ids))
     };
 };
 

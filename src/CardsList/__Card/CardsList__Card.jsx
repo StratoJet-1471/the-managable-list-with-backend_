@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
-import {BROWSER_STORAGE_KEY} from '../auxiliary-js-modules/defaults';
 
-import './Card.css';
+import './CardsList__Card.css';
 
 export default function Card(props) {
     const {
@@ -20,25 +19,9 @@ export default function Card(props) {
 
     const cardClass = selected ? 'card card_selected' : 'card';
 
-    const updateSessionStorageByCardSelect = (newSelected) => {
-        const objectFromStorage = sessionStorage.getItem(BROWSER_STORAGE_KEY) ? JSON.parse(sessionStorage.getItem(BROWSER_STORAGE_KEY)) : null;
-        //Получим объект со св-вами вида "id": {indexInCardsSequence: number, selected:boolean}
-
-        if(objectFromStorage) {
-            objectFromStorage[cardId].selected = newSelected;
-            sessionStorage.setItem(BROWSER_STORAGE_KEY, JSON.stringify(objectFromStorage));
-        }
-    };
-
     const checkBoxChangeHandler = () => {
-        if(selected) {
-            updateSessionStorageByCardSelect(false);
-            deselectCard(cardId);
-        }
-        else {
-            updateSessionStorageByCardSelect(true);
-            selectCard(cardId);
-        }        
+        if(selected) deselectCard(cardId);
+        else selectCard(cardId);         
     }
 
     if(draggable) {
@@ -97,12 +80,4 @@ export default function Card(props) {
             </div>
         );
     }
-
-
-
-
-
-
-
-
 }

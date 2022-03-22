@@ -9,7 +9,6 @@ const mapStateToProps = state => {
         cardsSequenceInfo: state.cardsSequenceInfo,
         cardsProducedSequenceInfo: state.cardsProducedSequenceInfo,
         initialFetchStatus: state.initialFetchStatus,
-        fetchToExpandListStatus: state.fetchToExpandListStatus,
         fetchForSearchStatus: state.fetchForSearchStatus
     };
 };
@@ -20,7 +19,6 @@ const mapDispatchToProps = (dispatch) => {
         updateCardsProducedSequenceInfo: newObtainedSequence => dispatch(updateCardsProducedSequenceInfo(newObtainedSequence)),
         resetCardsStateToDefault: () => dispatch(resetCardsStateToDefault()),
         initialFetch: () => dispatch(initialFetch()),
-        fetchCardsToExpandList: (idsToFetch) => dispatch(fetchCardsToExpandList(idsToFetch)),
         fetchForSearch: (strToSearch) => dispatch(fetchForSearch(strToSearch)),
     };
 };

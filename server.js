@@ -2,84 +2,66 @@ const express = require('express');
 
 const app = express();
 
-const infoObjects = require('./info.js');
+const dataObjects = require('./info.js');
 
-const defaultInfoObjectsNInChunk = 20;
-let sentIds = new Set(); //Сюда записываются id отправленных клиенту объектов.
+let elementsMetaData = {};
 
-let elementsSequenceInfo = {};
-
-for (let i = 0; i < infoObjects.length; i++) {
-    elementsSequenceInfo[String(infoObjects[i].id)] = i;
+for (let i = 0; i < dataObjects.length; i++) {
+    elementsMetaData[String(dataObjects[i].id)] = { indexInMainSequence: i, selected: false};
 }
 
 app.use(express.static("build")); //*
+app.use(express.text());
 
-app.use('/api/get-initial-data', express.text());
-app.post('/api/get-initial-data', (req, res) => {
-    const metaData = JSON.parse(req.body);
-    const elementsN = (metaData && metaData.elementsN) ? metaData.elementsN : defaultInfoObjectsNInChunk;
-    const allIds = infoObjects.map((infoObject) => infoObject.id);
-
-    const reqInfoObjects = infoObjects.slice(0, elementsN);    
-    const responseObject = {
-        allIds,
-        infoObjects: reqInfoObjects
+app.post('/api/get-data', (req, res) => {
+    const requestData = JSON.parse(req.body);
+/*
+    //Получится:
+    requestData = {
+        elementIds: [string]
     };
+*/
 
-    sentIds.clear();
-    for (let obj of reqInfoObjects) { sentIds.add(obj.id); }
-
-    res.send(JSON.stringify(responseObject));
+    //Сильно упрощаем себе жизнь, считая, что dataObjects рассортирован по id, и что id - целые числа 0+.
+    const respDataObjects = (requestData && requestData.elementIds && Array.isArray(requestData.elementIds)) ? requestData.elementIds.map((id) => dataObjects[id-1]) : []; 
+    setTimeout(() => res.send(JSON.stringify(respDataObjects)), 1000);
 });
 
-app.use('/api/get-extended-data', express.text());
-app.post('/api/get-extended-data', (req, res) => {
-    const metaData = JSON.parse(req.body);
-    //Сильно упрощаем себе жизнь, считая, что infoObjects рассортирован по id, и что id - целые числа 0+.
-    const responseObjsArray = metaData.elementIds.map((id) => infoObjects[id-1]);
-    for (let obj of responseObjsArray) { sentIds.add(obj.id); }
-
-    res.send(JSON.stringify(responseObjsArray));
+app.get('/api/get-main-meta-data', (_, res) => {
+    res.send(JSON.stringify(elementsMetaData));
 });
 
-app.use('/api/search', express.text());
 app.post('/api/search', (req, res) => {
-    const metaData = JSON.parse(req.body);
-    const searchStr = metaData.strToSearch;
-    const foundIds = infoObjects.filter((obj) => obj.body.toLowerCase().includes(searchStr.toLowerCase().trim())).map((obj) => obj.id);
-    //Сильно упрощаем себе жизнь, считая, что infoObjects рассортирован по id, и что id - целые числа 0+.
-    const objectsToSend = foundIds.filter((id) => !sentIds.has(id)).map((id) => infoObjects[id-1]);
+    const requestData = JSON.parse(req.body);
+    const {strToSearch, alreadyLoadedIds} = requestData;
+    const foundIds = dataObjects.filter((obj) => obj.body.toLowerCase().includes(String(strToSearch).toLowerCase().trim())).map((obj) => obj.id);
+
+    let objectsToSend;
+    if(alreadyLoadedIds && Array.isArray(alreadyLoadedIds)) {
+        const unsentIds = foundIds.filter((id) => { //Находим id, чьи объекты ещё не были отправлены.
+            return !alreadyLoadedIds.includes(id);
+        });
+
+        //Сильно упрощаем себе жизнь, считая, что dataObjects рассортирован по id, и что id - целые числа 0+.
+        objectsToSend = unsentIds.map((id) => dataObjects[id-1]); //Формируем массив объектов, которые нужно отправить.
+        
+    }
+    else objectsToSend = foundIds.map((id) => dataObjects[id-1]);
+    
     const responseObject = {
         foundIds,
-        previouslyUnsentInfoObjects: objectsToSend
+        newDataObjects: objectsToSend
     };
 
-    for (let obj of objectsToSend) { sentIds.add(obj.id); }
-
-    res.send(JSON.stringify(responseObject));
+    setTimeout(() => res.send(JSON.stringify(responseObject)), 1000);
 });
 
-app.use('/api/save-sequence', express.text());
 app.post('/api/save-sequence', (req, res) => { 
-    const newElementsSequenceInfo = JSON.parse(req.body);
+    const newElementsMetaData = JSON.parse(req.body);
 
-    elementsSequenceInfo = newElementsSequenceInfo;
+    elementsMetaData = newElementsMetaData;
     
     res.send();
-});
-
-app.use('/api/load-sequence', express.text());
-app.get('/api/load-sequence', (_, res) => { 
-    res.send(JSON.stringify(elementsSequenceInfo));
-});
-
-//Если задано (*) выше, то он сюда вообще не попадёт.
-app.get('/*', (_, res) => {
-    const options = {root: "./"};
-    res.sendFile('build/index.html', options, (err) => {
-        if(err) res.status(404).send();
-    });
 });
 
 app.listen(3000, () => console.log("Server started at http://localhost:3000"));
